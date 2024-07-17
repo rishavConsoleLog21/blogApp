@@ -1,22 +1,22 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, Select, RTE } from "../index";
 import appwriteService from "../../appwrite/appConfig";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const PostForm = ({ post }) => {
-  const navigate = useNavigate();
-  const userData = useSelector((state) => state.user.userData);
+export default function PostForm({ post }) {
   const { register, handleSubmit, watch, setValue, control, getValues } =
     useForm({
       defaultValues: {
         title: post?.title || "",
-        slug: post?.slug || "",
+        slug: post?.$id || "",
         content: post?.content || "",
-        status: post?.status || "",
+        status: post?.status || "active",
       },
     });
+  const navigate = useNavigate();
+  const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
     if (post) {
@@ -56,20 +56,18 @@ const PostForm = ({ post }) => {
     return value
       .trim()
       .toLowerCase()
-      .replace(/^[a-zA-Z\d\s]+/g, "-")
+      .replace(/[^a-zA-Z\d\s]+/g, "-")
       .replace(/\s+/g, "-");
   }, []);
 
   useEffect(() => {
-    const subscription = watch((value, name) => {
+    const subscription = watch((value, { name }) => {
       if (name === "title") {
         setValue("slug", slugTransform(value.title), { shouldValidate: true });
       }
     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, [watch, slugTransform, setValue]);
 
   return (
@@ -132,6 +130,4 @@ const PostForm = ({ post }) => {
       </div>
     </form>
   );
-};
-
-export default PostForm;
+}

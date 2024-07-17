@@ -10,6 +10,8 @@ import Signup from "./Signup";
 import Login from "./Login";
 import PostCard from "./PostCard";
 import PostForm from "./post.form/PostForm";
+import AuthLayout from "./AuthLayout";
+import Select from "./Select";
 
 export {
   Header,
@@ -24,4 +26,6 @@ export {
   Signup,
   PostCard,
   PostForm,
+  AuthLayout,
+  Select,
 };

@@ -12,7 +12,7 @@ const Signup = () => {
   const [error, setError] = useState("");
   const { register, handleSubmit } = useForm();
 
-  const Signup = async (data) => {
+  const create = async (data) => {
     setError("");
     try {
       const userData = await authService.createAccount(data);
@@ -23,6 +23,7 @@ const Signup = () => {
       }
     } catch (error) {
       setError(error.message);
+      console.log("Signup :: create :: error", error);
     }
   };
 
@@ -78,12 +79,6 @@ const Signup = () => {
               placeholder="Enter your password"
               {...register("password", {
                 required: true,
-                validate: {
-                  matchPatern: (value) =>
-                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(
-                      value
-                    ) || "Password must be a valid",
-                },
               })}
             />
             <Button type="submit" className="w-full">
